@@ -3,7 +3,7 @@ import paramiko
 import subprocess
 
 def server_check() -> str:
-    interfaces = ["en0", "en1"]                 #Hello
+    interfaces = ["en0", "en1"]                 
     detected_ip = None
 
     for iface in interfaces:
