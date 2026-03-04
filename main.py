@@ -1,6 +1,8 @@
 import ipaddress
 import paramiko
 import subprocess
+import iperf_runner
+
 
 def server_check() -> str:
     interfaces = ["en0", "en1"]                 
@@ -38,20 +40,15 @@ def server_check() -> str:
             print("Invalid IP format. Try again.")
 
 
-def client_check() -> str:
-    client_user = input("Please enter the username of the client: ")
+def client_check() -> tuple[str, str]:
+    client_user = input("Please enter the username of the client: ").strip()
     while True:
         client_ip = input("Enter client IP (SSH target): ").strip()
-        if not client_ip:
-            print("Client IP cannot be empty. Try again.")
-            continue
-
         try:
             ipaddress.ip_address(client_ip)
-            return client_ip
+            return client_user, client_ip
         except ValueError:
             print("Invalid IP format. Example: 192.168.50.9")
-
 
 def main():
     print('')
@@ -97,11 +94,12 @@ def main():
 
     print(ascii_art)
     print('Welcome to NETRUNNER!')
-    serverIP = input("To begin, please enter your server ip: ")
-   # clientIP = input("Now please enter your client IP: ")
-    print("Your server: " , serverIP,)
-    server_check()
-    client_check()
+    serverIP = server_check()
+    print("Your server:", serverIP)
+    client_user, client_ip = client_check()
+    
+    
+
     while True:
 
         print("\nSelect Test Type:")
@@ -112,7 +110,9 @@ def main():
         choice = input("Enter selection: ")
 
         if choice == "1":
+            iperf_runner.tcp_runner(serverIP, client_ip, client_user)
             print("Running TCP")
+
         elif choice == "2":
             print("Running UDP")
         elif choice == "3":
