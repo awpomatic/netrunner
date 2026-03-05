@@ -2,7 +2,7 @@ import ipaddress
 import paramiko
 import subprocess
 import iperf_runner
-
+import time
 
 def server_check() -> str:
     interfaces = ["en0", "en1"]                 
@@ -44,6 +44,14 @@ def client_check() -> tuple[str, str]:
     client_user = input("Please enter the username of the client: ").strip()
     while True:
         client_ip = input("Enter client IP (SSH target): ").strip()
+        time.sleep(3.0)
+        netrunner_ascii = r""" __   __     ______     ______   ______     __  __     __   __     __   __     ______     ______    
+/\ "-.\ \   /\  ___\   /\__  _\ /\  == \   /\ \/\ \   /\ "-.\ \   /\ "-.\ \   /\  ___\   /\  == \   
+\ \ \-.  \  \ \  __\   \/_/\ \/ \ \  __<   \ \ \_\ \  \ \ \-.  \  \ \ \-.  \  \ \  __\   \ \  __<   
+ \ \_\\"\_\  \ \_____\    \ \_\  \ \_\ \_\  \ \_____\  \ \_\\"\_\  \ \_\\"\_\  \ \_____\  \ \_\ \_\ 
+  \/_/ \/_/   \/_____/     \/_/   \/_/ /_/   \/_____/   \/_/ \/_/   \/_/ \/_/   \/_____/   \/_/ /_/ 
+                                                                                                            """
+        print (netrunner_ascii)
         try:
             ipaddress.ip_address(client_ip)
             return client_user, client_ip
@@ -97,9 +105,6 @@ def main():
     serverIP = server_check()
     print("Your server:", serverIP)
     client_user, client_ip = client_check()
-    
-    
-
     while True:
 
         print("\nSelect Test Type:")
@@ -116,12 +121,13 @@ def main():
         elif choice == "2":
             print("Running UDP")
         elif choice == "3":
+            print("Exiting, killing server...")
+            time.sleep(2.0)
+            serverKill = subprocess.run("pkill" , "iperf")
             print("Goodbye...")
             break
         else:
             print("Invalid entry")
             
-            
-
 if __name__ == "__main__":
     main()

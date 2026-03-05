@@ -4,23 +4,7 @@ import subprocess
 import json
 from typing import Any, Dict, Optional
 import time
-
-
-def server_start(serverIP, client_ip, client_user):
-    print("Verifiying Iperf version...")
-    time.sleep(2.0)
-    iperf_check = subprocess.run(["iperf3", "--version"])
-    returnCode = iperf_check.returncode
-   
-    if returnCode == 0:
-        print("Iperf exists! Initializing server...")
-        server_launch = subprocess.run(["iperf3", "-s", "-D"])
-        time.sleep(2.0)
-        server_check = subprocess.run(["lsof", "-i", ":5201"])
-        server_check = server_check.returncode
-        if server_check == 0:
-            
-            lucy_ASCII = r"""⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠄⠒⠒⠐⠒⠢⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+lucy_ASCII = r"""⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠄⠒⠒⠐⠒⠢⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⠙⣈⣔⣂⠀⠀⠀⠀⠀⠙⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠜⠀⠀⡾⡁⢠⢣⠀⠀⠀⠀⢀⠀⠀⠣⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡌⢠⠀⢸⠋⠉⢸⡄⠀⡄⠀⠀⢩⡄⠀⢨⡷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -53,13 +37,35 @@ def server_start(serverIP, client_ip, client_user):
 
 ⠀"""
 
+
+def server_start():
+    print("Verifiying Iperf version...")
+    time.sleep(2.0)
+    iperf_check = subprocess.run(["iperf3", "--version"])
+    returnCode = iperf_check.returncode
+   
+    if returnCode == 0:
+
+        print("Iperf exists! Initializing server...")
+        time.sleep(2.0)
+        server_check = subprocess.run(["lsof", "-i", ":5201"])
+        serverReturn = server_check.returncode
+        if serverReturn == 0:
+            time.sleep(2.0)
+            print(">>>>>>>>>>>>>>>>>>>>>>> Server online, initializing testcase >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             print(lucy_ASCII)
-            print(">>>>>>>>>>>>>>>>>>>>>>>Server online, initializing testcase>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            
-        
-    
+        else:
+            time.sleep(2.0)
+            server_launch = subprocess.run(["iperf3", "-s", "-D"])
+            print(">>>>>>>>>>>>>>>>>>>>>>> Server online, initializing testcase >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            print(lucy_ASCII)
+    else:
+        print("Iperf does not exist!")
+        print("Please exit and install Iperf3")
+
+
 def tcp_runner(serverIP, client_ip, client_user):
-    server_start(serverIP, client_ip, client_user)
+    server_start()
     print("Server IP: " , serverIP, "\n", "Client IP: " ,  client_ip, "\n" , "Client User: ", client_user)
     tcp_cmd = f"iperf3 -c {serverIP} -t 10 -J"
 
