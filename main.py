@@ -125,7 +125,7 @@ def main():
             time.sleep(2.0)
             serverKill = subprocess.run(["pkill", "iperf3"])
             
-            print("Goodbye...")
+            print("See ya choom...")
             break
         else:
             print("Invalid entry")
