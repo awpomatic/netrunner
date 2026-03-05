@@ -67,7 +67,28 @@ def server_start():
 def tcp_runner(serverIP, client_ip, client_user):
     server_start()
     print("Server IP: " , serverIP, "\n", "Client IP: " ,  client_ip, "\n" , "Client User: ", client_user)
+    ssh = ssh_connect(client_ip, client_user)
+
+    _ , which_out, _ = ssh.exec_command("which iperf3")
+    iperf_path = which_out.read().decode
     tcp_cmd = f"iperf3 -c {serverIP} -t 10 -J"
+    stdin, stdout, stderr = ssh.exec_command(tcp_cmd)
+    output = stdout.read().decode()
+    error = stderr.read().decode()
+    ssh.close()
+    if error:
+        print("Error:", error)
+    else:
+        print(output)
+    
+
+def ssh_connect(client_ip, client_user):
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    password = input("Please enter the password for the client device: ")
+    ssh.connect(client_ip, username=client_user, password=password)
+    return ssh
+    
 
 
 

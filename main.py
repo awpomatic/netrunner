@@ -123,7 +123,8 @@ def main():
         elif choice == "3":
             print("Exiting, killing server...")
             time.sleep(2.0)
-            serverKill = subprocess.run("pkill" , "iperf")
+            serverKill = subprocess.run(["pkill", "iperf3"])
+            
             print("Goodbye...")
             break
         else:
