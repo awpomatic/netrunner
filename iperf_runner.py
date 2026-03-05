@@ -70,8 +70,8 @@ def tcp_runner(serverIP, client_ip, client_user):
     ssh = ssh_connect(client_ip, client_user)
 
     _ , which_out, _ = ssh.exec_command("which iperf3")
-    iperf_path = which_out.read().decode
-    tcp_cmd = f"iperf3 -c {serverIP} -t 10 -J"
+    iperf_path = which_out.read().decode().strip()
+    tcp_cmd = f"{iperf_path} -c {serverIP} -t 10 -J"
     stdin, stdout, stderr = ssh.exec_command(tcp_cmd)
     output = stdout.read().decode()
     error = stderr.read().decode()
@@ -81,6 +81,23 @@ def tcp_runner(serverIP, client_ip, client_user):
     else:
         print(output)
     
+def udp_runner(serverIP, client_ip, client_user):
+    server_start()
+    print("Server IP: " , serverIP, "\n", "Client IP: " ,  client_ip, "\n" , "Client User: ", client_user)
+    ssh = ssh_connect(client_ip, client_user)
+
+    _ , which_out, _ = ssh.exec_command("which iperf3")
+    iperf_path = which_out.read().decode().strip()
+    udp_cmd = f"{iperf_path} -c {serverIP} -u -t 10 -J"
+    stdin, stdout, stderr = ssh.exec_command(udp_cmd)
+    output = stdout.read().decode()
+    error = stderr.read().decode()
+    ssh.close()
+    if error:
+        print("Error:", error)
+    else:
+        print(output)
+
 
 def ssh_connect(client_ip, client_user):
     ssh = paramiko.SSHClient()
@@ -92,7 +109,7 @@ def ssh_connect(client_ip, client_user):
 
 
 
-#def udp_runner():
+
 
 
 

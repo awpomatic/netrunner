@@ -117,8 +117,8 @@ def main():
         if choice == "1":
             iperf_runner.tcp_runner(serverIP, client_ip, client_user)
             print("Running TCP")
-
         elif choice == "2":
+            iperf_runner.udp_runner(serverIP, client_ip, client_user)
             print("Running UDP")
         elif choice == "3":
             print("Exiting, killing server...")
