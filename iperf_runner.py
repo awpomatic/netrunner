@@ -4,7 +4,6 @@ import subprocess
 import json
 from typing import Any, Dict, Optional
 import time
-import getpass
 
 lucy_ASCII = r"""⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠄⠒⠒⠐⠒⠢⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⠙⣈⣔⣂⠀⠀⠀⠀⠀⠙⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -66,10 +65,10 @@ def server_start():
         print("Please exit and install Iperf3")
 
 
-def tcp_runner(serverIP, client_ip, client_user):
+def tcp_runner(serverIP, client_ip, client_user, password):
     server_start()
     print("Server IP: " , serverIP, "\n", "Client IP: " ,  client_ip, "\n" , "Client User: ", client_user)
-    ssh = ssh_connect(client_ip, client_user)
+    ssh = ssh_connect(client_ip, client_user, password)
 
     _ , which_out, _ = ssh.exec_command("which iperf3")
     iperf_path = which_out.read().decode().strip()
@@ -83,10 +82,10 @@ def tcp_runner(serverIP, client_ip, client_user):
     else:
         print(output)
     
-def udp_runner(serverIP, client_ip, client_user):
+def udp_runner(serverIP, client_ip, client_user, password):
     server_start()
     print("Server IP: " , serverIP, "\n", "Client IP: " ,  client_ip, "\n" , "Client User: ", client_user)
-    ssh = ssh_connect(client_ip, client_user)
+    ssh = ssh_connect(client_ip, client_user, password)
 
     _ , which_out, _ = ssh.exec_command("which iperf3")
     iperf_path = which_out.read().decode().strip()
@@ -101,10 +100,9 @@ def udp_runner(serverIP, client_ip, client_user):
         print(output)
 
 
-def ssh_connect(client_ip, client_user):
+def ssh_connect(client_ip, client_user, password):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    password = getpass.getpass("Please enter the password for the client device: ")
     ssh.connect(client_ip, username=client_user, password=password)
     return ssh
     

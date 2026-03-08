@@ -171,6 +171,8 @@ def main():
     serverIP = server_check()
     print("Your server:", serverIP)
     client_user, client_ip = client_check()
+    import getpass
+    password = getpass.getpass("Please enter the password for the client device: ")
     while True:
 
         print("\nSelect Test Type:")
@@ -181,10 +183,10 @@ def main():
         choice = input("Enter selection: ")
 
         if choice == "1":
-            iperf_runner.tcp_runner(serverIP, client_ip, client_user)
+            iperf_runner.tcp_runner(serverIP, client_ip, client_user, password)
             print("Running TCP")
         elif choice == "2":
-            iperf_runner.udp_runner(serverIP, client_ip, client_user)
+            iperf_runner.udp_runner(serverIP, client_ip, client_user, password)
             print("Running UDP")
         elif choice == "3":
             print("Exiting, killing server...")
