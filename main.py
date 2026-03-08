@@ -3,6 +3,72 @@ import paramiko
 import subprocess
 import iperf_runner
 import time
+import os
+import random
+
+
+def scramble_line(line):
+    chars = '█░▓▒╳◈⚡#@%&'
+    return ''.join(random.choice(chars) if c != ' ' else ' ' for c in line)
+
+
+
+def animate_ascii(art):
+    lines = art.split('\n')
+
+    # scramble intro - each line decodes from random chars into real art
+    for i, line in enumerate(lines):
+        for _ in range(2):
+            scrambled = scramble_line(line)
+            print(f"\033[91m{scrambled}\033[0m")
+            time.sleep(0.01)
+            print('\033[1A\033[2K', end='')  # move up and clear line
+        print(f"\033[31m{line}\033[0m")
+
+    # static burst - flash random block characters over the whole art
+    for _ in range(3):
+        os.system('clear')
+        static = '\n'.join(scramble_line(line) for line in lines)
+        print(f"\033[91m{static}\033[0m")
+        time.sleep(0.08)
+    os.system('clear')
+    print(f"\033[31m{art}\033[0m")
+    time.sleep(0.3)
+
+    # glitch effect - randomly shift lines briefly
+    for _ in range(6):
+        time.sleep(0.4)
+        os.system('clear')
+        glitch_line = random.randint(0, len(lines) - 1)
+        glitch_shift = random.choice([-2, -1, 1, 2])
+        colored_lines = []
+        for i, line in enumerate(lines):
+            if i == glitch_line:
+                if glitch_shift > 0:
+                    colored_lines.append(f"\033[91m{' ' * glitch_shift + line}\033[0m")
+                else:
+                    colored_lines.append(f"\033[91m{line[abs(glitch_shift):]}\033[0m")
+            else:
+                colored_lines.append(f"\033[31m{line}\033[0m")
+        print('\n'.join(colored_lines))
+
+    # scanline pulse - dim the whole art then bring it back
+    for _ in range(3):
+        # dim
+        time.sleep(0.15)
+        os.system('clear')
+        print(f"\033[2m\033[31m{art}\033[0m")
+        # bright
+        time.sleep(0.15)
+        os.system('clear')
+        print(f"\033[1m\033[91m{art}\033[0m")
+
+    # final clean red
+    time.sleep(0.15)
+    os.system('clear')
+    print(f"\033[31m{art}\033[0m")
+
+
 
 def server_check() -> str:
     interfaces = ["en0", "en1"]                 
@@ -100,7 +166,7 @@ def main():
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠿⠿⠟⠻⠿⠿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 """
 
-    print(ascii_art)
+    animate_ascii(ascii_art)
     print('Welcome to NETRUNNER!')
     serverIP = server_check()
     print("Your server:", serverIP)
