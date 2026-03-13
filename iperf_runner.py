@@ -4,6 +4,8 @@ import subprocess
 import json
 from typing import Any, Dict, Optional
 import time
+import parser
+import writer
 
 lucy_ASCII = r"""⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠄⠒⠒⠐⠒⠢⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⠙⣈⣔⣂⠀⠀⠀⠀⠀⠙⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -81,6 +83,9 @@ def tcp_runner(serverIP, client_ip, client_user, password):
         print("Error:", error)
     else:
         print(output)
+        results = parser.parse_tcp(output)
+        writer.write_results(results, "TCP")
+
     
 def udp_runner(serverIP, client_ip, client_user, password):
     server_start()
@@ -98,6 +103,8 @@ def udp_runner(serverIP, client_ip, client_user, password):
         print("Error:", error)
     else:
         print(output)
+        results = parser.parse_udp(output)
+        writer.write_results(results, "UDP")
 
 
 def ssh_connect(client_ip, client_user, password):
