@@ -166,11 +166,15 @@ def main():
         choice = input("Enter selection: ")
 
         if choice == "1":
-            iperf_runner.tcp_runner(serverIP, client_ip, client_user, password)
-            print("Running TCP")
+            runtimeTCP = input("How many times? ")
+            for i in range(int(runtimeTCP)):
+                iperf_runner.tcp_runner(serverIP, client_ip, client_user, password)
+                print("Running TCP")
         elif choice == "2":
-            iperf_runner.udp_runner(serverIP, client_ip, client_user, password)
-            print("Running UDP")
+            runtimeUDP = input("How many times? ")
+            for i in range(int(runtimeUDP)):
+                iperf_runner.udp_runner(serverIP, client_ip, client_user, password)
+                print("Running UDP")
         elif choice == "3":
             print("Exiting, killing server...")
             time.sleep(2.0)

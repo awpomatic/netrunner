@@ -6,9 +6,9 @@ A network testing tool that SSHes into a client device and runs iperf3 TCP and U
 
 ## Requirements
 
-You need the following installed on **both** the server machine (your Mac) and the client machine (the device you are testing against).
+You need the following installed on **both** the server machine and the client machine (the device you are testing against).
 
-### Server Machine (your Mac)
+### Server Machine (Mac or Linux)
 
 - Python 3.10 or higher
 - iperf3
@@ -23,8 +23,9 @@ You need the following installed on **both** the server machine (your Mac) and t
 
 ## Installation
 
-### 1. Install iperf3 on your Mac (server)
+### 1. Install iperf3 on your server machine
 
+**macOS:**
 ```bash
 brew install iperf3
 ```
@@ -32,6 +33,11 @@ brew install iperf3
 If you don't have Homebrew:
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+**Linux:**
+```bash
+sudo apt install iperf3
 ```
 
 ### 2. Install iperf3 on the client (Linux)
@@ -55,7 +61,7 @@ sudo systemctl status ssh
 
 The status should say `active (running)`.
 
-### 4. Clone the repo on your Mac
+### 4. Clone the repo on your server machine
 
 ```bash
 git clone <your-repo-url>
@@ -122,9 +128,10 @@ TCP rows have throughput only. UDP rows include throughput, jitter, and packet l
 - Run `iperf3 --version` on the client to confirm it is installed
 - If not, run `sudo apt install iperf3`
 
-**iperf3 not found on server (your Mac)**
+**iperf3 not found on server**
 - Run `iperf3 --version` in your terminal
-- If not found, run `brew install iperf3`
+- macOS: `brew install iperf3`
+- Linux: `sudo apt install iperf3`
 
 **paramiko import error**
 - Make sure your virtual environment is active: `source venv/bin/activate`
