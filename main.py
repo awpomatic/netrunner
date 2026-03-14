@@ -79,29 +79,6 @@ def server_check() -> str:
     detected_ip = socketCreate.getsockname()[0]
     socketCreate.close()
     return detected_ip
-        
-  #  interfaces = ["en0", "en1"]                 
-   # detected_ip = None
-
-    #for iface in interfaces:
-     #   result = subprocess.run(
-      #      ["ipconfig", "getifaddr", iface],
-       #     capture_output=True,
-        #    text=True
-      #  )
-        #candidate = result.stdout.strip()
-        #if candidate:
-        #    detected_ip = candidate
-         #   break
-
-    # If we detected something, validate it
-   # if detected_ip:
-    ###      print(f"Detected server IP on {iface}: {detected_ip}")
-       #     return detected_ip
-        #except ValueError:
-         ##  detected_ip = None
-
-    # Fallback: manual input until valid
     while True:
         manual = input("Could not auto-detect IP. Enter server IP manually: ").strip()
         try:
