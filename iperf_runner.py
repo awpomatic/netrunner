@@ -83,7 +83,7 @@ def _find_remote_iperf3(ssh):
     return None
 
 
-def tcp_runner(serverIP, client_ip, client_user, password):
+def tcp_runner(serverIP, client_ip, client_user, password, output_dir):
     server_start()
     print("Server IP: " , serverIP, "\n", "Client IP: " ,  client_ip, "\n" , "Client User: ", client_user)
     ssh = ssh_connect(client_ip, client_user, password)
@@ -103,10 +103,10 @@ def tcp_runner(serverIP, client_ip, client_user, password):
     else:
         print(output)
         results = parser.parse_tcp(output)
-        writer.write_results(results, "TCP")
+        writer.write_results(results, "TCP", output_dir)
 
     
-def udp_runner(serverIP, client_ip, client_user, password):
+def udp_runner(serverIP, client_ip, client_user, password, output_dir):
     server_start()
     print("Server IP: " , serverIP, "\n", "Client IP: " ,  client_ip, "\n" , "Client User: ", client_user)
     ssh = ssh_connect(client_ip, client_user, password)
@@ -126,7 +126,7 @@ def udp_runner(serverIP, client_ip, client_user, password):
     else:
         print(output)
         results = parser.parse_udp(output)
-        writer.write_results(results, "UDP")
+        writer.write_results(results, "UDP", output_dir)
 
 
 def ssh_connect(client_ip, client_user, password):

@@ -8,6 +8,7 @@ import random
 import parser
 import writer
 import socket
+from datetime import datetime
 
 
 def scramble_line(line):
@@ -74,11 +75,14 @@ def animate_ascii(art):
 
 
 def server_check() -> str:
-    socketCreate = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    socketCreate.connect(("8.8.8.8" , 80))
-    detected_ip = socketCreate.getsockname()[0]
-    socketCreate.close()
-    return detected_ip
+    try:
+        socketCreate = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        socketCreate.connect(("8.8.8.8", 80))
+        detected_ip = socketCreate.getsockname()[0]
+        socketCreate.close()
+        return detected_ip
+    except Exception:
+        pass
     while True:
         manual = input("Could not auto-detect IP. Enter server IP manually: ").strip()
         try:
@@ -156,6 +160,8 @@ def main():
     client_user, client_ip = client_check()
     import getpass
     password = getpass.getpass("Please enter the password for the client device: ")
+    run_dir = f"results/run_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
+    os.makedirs(run_dir)
     while True:
 
         print("\nSelect Test Type:")
@@ -168,12 +174,12 @@ def main():
         if choice == "1":
             runtimeTCP = input("How many times? ")
             for i in range(int(runtimeTCP)):
-                iperf_runner.tcp_runner(serverIP, client_ip, client_user, password)
+                iperf_runner.tcp_runner(serverIP, client_ip, client_user, password, run_dir)
                 print("Running TCP")
         elif choice == "2":
             runtimeUDP = input("How many times? ")
             for i in range(int(runtimeUDP)):
-                iperf_runner.udp_runner(serverIP, client_ip, client_user, password)
+                iperf_runner.udp_runner(serverIP, client_ip, client_user, password, run_dir)
                 print("Running UDP")
         elif choice == "3":
             print("Exiting, killing server...")

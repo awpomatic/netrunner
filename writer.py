@@ -1,7 +1,9 @@
 import csv
+import os
 
-def write_results(results, test_type):
-    with open("results.csv", "a") as file:
+def write_results(results, test_type, output_dir):
+    filename = "udp_results.csv" if test_type.lower() == "udp" else "tcp_results.csv"
+    with open(os.path.join(output_dir, filename), "a") as file:
         writer = csv.writer(file)
         row = [test_type]
         for key, value in results.items():
